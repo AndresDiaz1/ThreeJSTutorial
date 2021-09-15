@@ -1,6 +1,8 @@
 import './style.css'
 import * as THREE from 'three'
 import gsap from 'gsap'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
 
 const scene = new THREE.Scene();
 
@@ -75,6 +77,9 @@ gsap.to(cube3.position, {
 })
 
 
+//Controls 
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
 
 const clock = new THREE.Clock()
 //Animations
@@ -86,12 +91,14 @@ const tick = ()=> {
     cube1.rotation.y = elapsedTime
     cube2.position.y = Math.sin(elapsedTime)
 
+    //Update controls
+    controls.update()
+
+
     //Render
     renderer.render(scene, camera);
 
     window.requestAnimationFrame(tick)
 }
-
-
 
 tick()
