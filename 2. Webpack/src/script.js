@@ -4,6 +4,26 @@ import gsap from 'gsap'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'dat.gui'
 
+
+const loadingManager = new THREE.LoadingManager()
+
+loadingManager.onStart = ()=> {
+
+}
+
+const textureLoader = new THREE.TextureLoader(loadingManager)
+const colorTexture = textureLoader.load('/textures/door/color.jpg');
+const alphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+const heightTexture = textureLoader.load('/textures/door/height.jpg');
+const normalTexture = textureLoader.load('/textures/door/normal.jpg');
+const ambientocclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+const matcapTexture = textureLoader.load('textures/matcaps/1.png');
+const gradientTexture = textureLoader.load('textures/gradients/3.jpg');
+
+
+
 window.addEventListener('resize',(e)=>{
     sizes.width = window.innerWidth;
     sizes.height = window.innerWidth;
@@ -32,7 +52,8 @@ const scene = new THREE.Scene();
 // Red Cube
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({
-    color: 0xf50000 
+    //color: 0xf50000,
+    map: colorTexture 
 });
 const mesh = new THREE.Mesh(geometry, material);
 mesh.position.y = 2;
@@ -177,6 +198,17 @@ const tick = ()=> {
     cube1.rotation.y = elapsedTime
     cube2.position.y = Math.sin(elapsedTime)
 
+
+    sphere.rotation.y = elapsedTime * 0.1
+    plane.rotation.y = elapsedTime * 0.1
+    torus.rotation.y = elapsedTime * 0.1
+
+    sphere.rotation.x = elapsedTime * 0.15
+    plane.rotation.x = elapsedTime * 0.15
+    torus.rotation.x = elapsedTime * 0.15
+
+
+
     //Update controls
     controls.update()
 
@@ -210,6 +242,42 @@ gui.addColor(parameters, 'color').onChange(()=> {
 })
 
 gui.add(parameters, 'spin')
+
+
+//Materials
+
+// const material2 = new THREE.MeshBasicMaterial()
+// material2.opacity = 0.5;
+// material2.transparent = true
+
+// const material2 = new THREE.MeshNormalMaterial()
+
+const material2 = new THREE.MeshMatcapMaterial()
+material2.matcap = matcapTexture
+
+// const material2 = new THREE.MeshDepthMaterial()
+
+
+const sphere = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(0.5, 16, 16),
+    material2
+)
+
+sphere.position.x = -1.5
+
+const plane = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(1,1),
+    material2
+)
+
+const torus = new THREE.Mesh(
+    new THREE.TorusBufferGeometry(0.3, 0.2, 16, 32),
+    material2
+)
+
+torus.position.x = 1.5
+
+scene.add(sphere, plane, torus)
 
 
 tick()
