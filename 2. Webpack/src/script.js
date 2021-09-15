@@ -3,8 +3,7 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'dat.gui'
-
-
+ 
 const loadingManager = new THREE.LoadingManager()
 
 loadingManager.onStart = ()=> {
@@ -278,6 +277,53 @@ const torus = new THREE.Mesh(
 torus.position.x = 1.5
 
 scene.add(sphere, plane, torus)
+
+
+//FONTS
+
+const fontsLoader = new THREE.FontLoader()
+fontsLoader.load(
+    '/fonts/helvetiker_bold.typeface.json',
+    (font) => {
+        const textGeometry = new THREE.TextBufferGeometry(
+            'Hello ThreeJS',
+            {
+                font,
+                size: 0.5,
+                height: 0.2,
+                curveSegments: 5,
+                bevelEnabled: true,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
+                bevelOffset: 0,
+                bevelSegments: 4
+            }
+        )
+        textGeometry.center()
+        const textMaterial = new THREE.MeshMatcapMaterial()
+        textMaterial.matcap = matcapTexture
+        const text = new THREE.Mesh(textGeometry, textMaterial)
+        text.position.y = 3
+        scene.add(text)
+    }
+)
+
+const donutGeometry = new THREE.TorusBufferGeometry(0.3, 0.2, 20, 45)
+const donutMaterial = new THREE.MeshMatcapMaterial({matcap: matcapTexture})
+for(let i=0; i< 100; i++) {
+    const donut = new THREE.Mesh(donutGeometry, donutMaterial)
+    donut.position.x = (Math.random() - 0.5) * 10
+    donut.position.y = (Math.random() - 0.5) * 10
+    donut.position.z = (Math.random() - 0.5) * 10
+
+    donut.rotation.x = Math.random() * Math.PI
+    donut.rotation.y = Math.random() * Math.PI
+
+    const scale = Math.random()
+    donut.scale.set(scale, scale, scale)
+
+    scene.add(donut)
+}
 
 
 tick()
