@@ -1,5 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
+import gsap from 'gsap'
 
 const scene = new THREE.Scene();
 
@@ -13,7 +14,7 @@ mesh.position.y = 2;
 scene.add(mesh);
 
 // Axes helper
-const axesHelper = new THREE.AxesHelper();
+const axesHelper = new THREE.AxesHelper(10 );
 scene.add(axesHelper);
 
 //Group
@@ -58,4 +59,39 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 
-renderer.render(scene, camera);
+
+
+// Green Socket animation
+gsap.to(cube3.position, {
+    x: 2,
+    duration: 1,
+    delay: 1
+})
+
+gsap.to(cube3.position, {
+    x: -2,
+    duration: 1,
+    delay: 2
+})
+
+
+
+const clock = new THREE.Clock()
+//Animations
+const tick = ()=> {
+
+    //Time
+    const elapsedTime = clock.getElapsedTime()
+    //Update Objects
+    cube1.rotation.y = elapsedTime
+    cube2.position.y = Math.sin(elapsedTime)
+
+    //Render
+    renderer.render(scene, camera);
+
+    window.requestAnimationFrame(tick)
+}
+
+
+
+tick()
