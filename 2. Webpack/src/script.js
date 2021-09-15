@@ -2,7 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-
+import * as dat from 'dat.gui'
 
 window.addEventListener('resize',(e)=>{
     sizes.width = window.innerWidth;
@@ -158,6 +158,11 @@ gsap.to(cube3.position, {
 })
 
 
+
+
+
+
+
 //Controls 
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -181,5 +186,30 @@ const tick = ()=> {
 
     window.requestAnimationFrame(tick)
 }
+
+// debug
+
+//Press H to hide it
+const gui = new dat.GUI();
+const parameters = {
+    color: 0xff0000,
+    spin: ()=> {
+        gsap.to(mesh.rotation, {duration: 1, y: mesh.rotation.y + Math.PI *2})
+    }
+}
+
+gui.add(mesh.position, 'y', -3, 3, 0.01)
+gui.add(mesh.position, 'z').min(-3).max(3).step(0.02).name('Z axiiis')
+
+gui.add(meshCustomGeometry, 'visible')
+gui.add(material, 'wireframe')
+
+
+gui.addColor(parameters, 'color').onChange(()=> {
+    material.color.set(parameters.color)
+})
+
+gui.add(parameters, 'spin')
+
 
 tick()
