@@ -83,6 +83,12 @@ window.addEventListener('mousemove', (_event)=> {
     mouse.y = -(_event.clientY/sizes.height) *2 +1
 })
 
+window.addEventListener('click', (_event)=> {
+    if(currentIntersect) {
+        
+    }
+})
+
 /**
  * Camera
  */
